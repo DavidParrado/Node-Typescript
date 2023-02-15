@@ -1,0 +1,1 @@
+{"version":3,"file":"validar-email.js","sourceRoot":"","sources":["../../middlewares/validar-email.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;AACA,iEAAyC;AAKlC,MAAM,YAAY,GAAG,CAAO,KAAa,EAAG,EAAE;IAIjD,MAAM,WAAW,GAAG,MAAM,iBAAO,CAAC,OAAO,CAAC,EAAE,KAAK,EAAE,CAAC,CAAC;IACrD,IAAI,WAAW,EAAG;QACd,MAAM,IAAI,KAAK,CAAC,0BAA0B,CAAC,CAAC;KAC/C;AAEL,CAAC,CAAA,CAAA;AATY,QAAA,YAAY,gBASxB"}
