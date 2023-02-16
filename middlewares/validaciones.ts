@@ -9,8 +9,9 @@ export const validarEmail = async( email: string ) => {
 }
 
 export const existeId = async( id: string ) => {
+    
     const usuario = await Usuario.findById( id );
-    if( !usuario ) { 
+    if( !usuario || !usuario.status ) { 
         throw new Error('No existe un usuario con ese id')
     }
 }

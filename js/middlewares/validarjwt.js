@@ -24,16 +24,18 @@ const validarJwt = (req, res = express_1.response, next) => __awaiter(void 0, vo
     if (id || userId) {
         const usuario = yield usuario_1.default.findById(id || userId);
         const payload = jsonwebtoken_1.default.verify(token, process.env.SECRETKEY, (err, decode) => (decode !== undefined) ? decode : err);
-        if (payload.id !== (usuario === null || usuario === void 0 ? void 0 : usuario.id)) {
-            return res.json({ msg: 'Token invalido' });
+        const usuarioAutenticado = yield usuario_1.default.findById(payload.id);
+        if (payload.id !== (usuario === null || usuario === void 0 ? void 0 : usuario.id) && (usuarioAutenticado === null || usuarioAutenticado === void 0 ? void 0 : usuarioAutenticado.rol) !== 'ADMIN') {
+            return res.json({ msg: 'Token no valido, no coincide el id autenticado con el id en el parametro' });
         }
         req.idAutenticado = payload.id;
     }
     else {
         const payload = jsonwebtoken_1.default.verify(token, process.env.SECRETKEY, (err, decode) => (decode !== undefined) ? decode : err);
         const usuario = yield usuario_1.default.findById(payload.id);
-        if (payload.id !== (usuario === null || usuario === void 0 ? void 0 : usuario.id)) {
-            return res.json({ msg: 'Token invalido' });
+        const usuarioAutenticado = yield usuario_1.default.findById(payload.id);
+        if (payload.id !== (usuario === null || usuario === void 0 ? void 0 : usuario.id) && (usuarioAutenticado === null || usuarioAutenticado === void 0 ? void 0 : usuarioAutenticado.rol) !== 'ADMIN') {
+            return res.json({ msg: 'Token no valido' });
         }
         req.idAutenticado = payload.id;
     }

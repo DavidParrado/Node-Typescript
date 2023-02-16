@@ -17,19 +17,22 @@ export const validarJwt = async( req:AuthInterface , res = response, next: () =>
     if( id || userId ) { 
     
         const usuario = await Usuario.findById( id || userId );
-        const payload = jwt.verify( <string>token , process.env.SECRETKEY!, ( err, decode ) =>  ( decode !== undefined ) ? decode : err )
-        if( (<any>payload).id !== usuario?.id ) { 
-            return res.json({ msg: 'Token invalido'})
+        const payload = jwt.verify( <string>token , process.env.SECRETKEY!, ( err, decode ) =>  ( decode !== undefined ) ? decode : err );
+        const usuarioAutenticado = await Usuario.findById((<any>payload).id );
+
+        if( (<any>payload).id !== usuario?.id &&  usuarioAutenticado?.rol !== 'ADMIN') { 
+            return res.json({ msg: 'Token no valido, no coincide el id autenticado con el id en el parametro'});
         }
-        
+
         req.idAutenticado = (<any>payload).id
     } else { 
 
-        const payload = jwt.verify( <string>token , process.env.SECRETKEY!, ( err, decode ) =>  ( decode !== undefined ) ? decode : err )
-        const usuario = await Usuario.findById((<any>payload).id)
+        const payload = jwt.verify( <string>token , process.env.SECRETKEY!, ( err, decode ) =>  ( decode !== undefined ) ? decode : err );
+        const usuario = await Usuario.findById((<any>payload).id);
+        const usuarioAutenticado = await Usuario.findById((<any>payload).id );
         
-        if( (<any>payload).id !== usuario?.id ) { 
-            return res.json({ msg: 'Token invalido'})
+        if( (<any>payload).id !== usuario?.id && usuarioAutenticado?.rol !== 'ADMIN') { 
+            return res.json({ msg: 'Token no valido'});
         }
         req.idAutenticado = (<any>payload).id
     }

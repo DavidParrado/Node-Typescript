@@ -1,19 +1,18 @@
 import { Router } from 'express';
-import { crearPokebola, incluirPokemon, mostrarPokebola, eliminarPokemon, eliminarPokebola, mostrarPokebolas } from '../controllers/pokebola';
-import { validarCrearPokebola, validarIncluirPokemon, validarEliminarPokebola, validarEliminarPokemon } from '../middlewares/validation-pokebolas';
-import { validarJwt } from '../middlewares/validarjwt';
-import { validarErrores } from '../middlewares/validation-error';
+import { crearPokebola, agregarPokemon, mostrarPokebola, eliminarPokemon, eliminarPokebola, mostrarPokebolas } from '../controllers/pokebola';
+import { validarCrearPokebola, validarIncluirPokemon, validarEliminarPokebola, validarEliminarPokemon, validarMostrarPokebolas, validarMostrarPokebola } from '../middlewares/validation-pokebolas';
+
 
 export const router = Router();
 
-router.get('/', [ validarJwt, validarErrores ] ,mostrarPokebolas )
+router.get('/', validarMostrarPokebolas() , mostrarPokebolas );
 
-router.get('/:userId', mostrarPokebola )
+router.get('/:userId', validarMostrarPokebola() , mostrarPokebola );
 
 router.post('/:userId', validarCrearPokebola() , crearPokebola );
 
-router.put('/:userId/:pokemonId', validarIncluirPokemon() , incluirPokemon );
+router.put('/:userId/:pokemonId', validarIncluirPokemon() , agregarPokemon );
 
 router.delete('/:userId', validarEliminarPokebola() , eliminarPokebola );
 
-router.delete('/:userId/pokemonId', validarEliminarPokemon() , eliminarPokemon );
+router.delete('/:userId/:pokemonId', validarEliminarPokemon() , eliminarPokemon );

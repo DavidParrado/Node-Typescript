@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
-import Pokebola, { IPokemon } from '../classes/pokebola';
-import fetch from 'node-fetch';
+import Pokebola from '../classes/pokebola';
 import { AuthInterface } from '../middlewares/validarjwt';
 import Usuario from '../classes/usuario';
+import { traerPokemon } from '../helpers/traer-pokemon';
 
 export const mostrarPokebola = async( req: Request, res: Response ) => {
 
     const { userId } = req.params;
 
-    const pokebola = await Pokebola.findOne({ userId });
+    const pokebola = await Pokebola.findOne({ userId, status: true });
     return res.json( pokebola );
 
 }
@@ -16,7 +16,7 @@ export const mostrarPokebola = async( req: Request, res: Response ) => {
 export const mostrarPokebolas = async( req: AuthInterface, res: Response ) => {
 
     const { idAutenticado } = req;
-    console.log( idAutenticado );
+
     const usuario = await Usuario.findById( idAutenticado );
     if( !usuario ) { return res.json({ msg: 'No existe un usuario con ese id'})};
     if( usuario.rol !== 'ADMIN' ) {
@@ -34,7 +34,7 @@ export const crearPokebola = async( req: Request, res: Response ) => {
     const { userId } = req.params;
     
 
-    const usuario = await Pokebola.findOne({ userId });
+    const usuario = await Pokebola.findOne({ userId, status: true });
     
     if( usuario ) { 
         return res.json({ msg: 'Este usuario ya tiene una pokebola registrada'})
@@ -51,8 +51,8 @@ export const eliminarPokebola = async( req: Request, res: Response ) => {
     const { userId } = req.params;
     
 
-    const usuario = await Pokebola.findOne({ userId });
-    if( !usuario ) { return res.json({ msg: 'Este usuario ya tiene una pokebola registrada'}) }
+    const usuario = await Pokebola.findOne({ userId, status: true });
+    if( !usuario ) { return res.json({ msg: 'El usuario no tiene pokebola para eliminar'}) };
     
     const pokebola = await Pokebola.findByIdAndUpdate( usuario.id, { status: false }, { new: true} );
     if( !pokebola ) { return res.json({ msg: 'La pokebola no existe'}) }
@@ -61,37 +61,51 @@ export const eliminarPokebola = async( req: Request, res: Response ) => {
 }
 
 
-export const incluirPokemon = async( req: Request, res: Response ) => {
 
+export const agregarPokemon = async( req: Request, res: Response ) => {
+    
     const { userId, pokemonId } = req.params;
-
+    
     const pokebola = await Pokebola.findOne({ userId });
+    
     if( !pokebola ) { return res.json({ msg: 'El usuario ingresado no tiene una pokebola registrada'})};
-    if( Number( pokemonId ) > 1008 ) { return res.json({ msg: 'Superaste el limite'})} ;
+    if( Number( pokemonId ) > 1008 ) { return res.json({ msg: 'No existe un pokemon con ese id'})} ;
     
+    const pokemon = await traerPokemon( pokemonId );
     
-    const resp = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${ pokemonId }`);
-    const { name, id,  pal_park_encounters, capture_rate, color, habitat, egg_groups } = await resp.json();
-    const [{ base_score }] = pal_park_encounters;
-    const pokemon = { name, id, capture_rate, base_score, color, habitat, egg_groups }
-
-    pokebola.pokemones.push( pokemon );
+    const pokemones = pokebola.pokemones;
+    if( pokemones.length >= 10 ) {
+        return res.json({ msg: 'Lo siento has llegado al maximo de pokemones, para poder agregar uno nuevo debes eliminar uno'});
+    }
+    
+    pokemones.push( pokemon );
     pokebola.save()
+
     return res.json( pokebola )
-
-
-
 
 }
 
 export const eliminarPokemon = async( req: AuthInterface, res: Response ) => {
 
+    const { pokemonId, userId } = req.params;
 
-    const { idAutenticado } = req;
-    const pokebola = await Pokebola.findOne({ userId: idAutenticado });
+    const pokebola = await Pokebola.findOne({ userId });
+
+    if( !pokebola ) { return res.json({ msg: 'El usuario ingresado no tiene una pokebola registrada'})};
+    
 
 
+    const pokemones = pokebola.pokemones;
+    const pokemon = pokemones.findIndex( (pokemon: { id: number; } ) => pokemon.id === Number(pokemonId) )
+    
+    if( pokemon >= 0 ) {
+        pokemones.splice( pokemon, 1 )
+    } else { 
+        return res.json({ msg: 'No existe ese pokemon dentro de la pokebola'});
+    }
+    
+    pokebola.save();
 
 
-    res.json( pokebola );
+    res.json({ msg: `El pokemon con id ${ pokemonId } ha sido eliminado exitosamente`, pokemon, pokebola });
 }

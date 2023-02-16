@@ -50,13 +50,6 @@ export const usuariosPost = async( req = request, res = response ) => {
 
 export const usuariosPut = async( req: AuthInterface, res = response ) => {
 
-    const idAutenticado = req.idAutenticado;
-    const usuarioAutenticado = await Usuario.findOne({ id: idAutenticado } )
-    if( usuarioAutenticado?.rol !== 'ADMIN') { 
-        return res.json({ msg: 'No tienes acceso a esta ruta'})
-    }
-
-
     const { id } = req.params;
     const { status, password, ...data } = req.body;
 
@@ -72,23 +65,18 @@ export const usuariosPut = async( req: AuthInterface, res = response ) => {
     
     const usuario = await Usuario.findByIdAndUpdate( id, data, { new: true } );
     
-    if( !usuario ) { 
+    if( !usuario || !usuario.status) { 
         return res.json({ 
             msg: 'El usuario no existe'
         })
     }
+    
 
     return res.json( usuario );
     
 }
 
 export const usuariosDelete = async( req: AuthInterface, res = response ) => {
-
-    const idAutenticado = req.idAutenticado;
-    const usuarioAutenticado = await Usuario.findOne({ id: idAutenticado } )
-    if( usuarioAutenticado?.rol !== 'ADMIN') { 
-        return res.json({ msg: 'No tienes acceso a esta ruta'})
-    }
     
     const { id } = req.params;
     const usuario = await Usuario.findByIdAndUpdate( id, { status: false }, { new: true });

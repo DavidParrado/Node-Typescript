@@ -12,19 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.eliminarPokemon = exports.incluirPokemon = exports.eliminarPokebola = exports.crearPokebola = exports.mostrarPokebolas = exports.mostrarPokebola = void 0;
+exports.eliminarPokemon = exports.agregarPokemon = exports.eliminarPokebola = exports.crearPokebola = exports.mostrarPokebolas = exports.mostrarPokebola = void 0;
 const pokebola_1 = __importDefault(require("../classes/pokebola"));
-const node_fetch_1 = __importDefault(require("node-fetch"));
 const usuario_1 = __importDefault(require("../classes/usuario"));
+const traer_pokemon_1 = require("../helpers/traer-pokemon");
 const mostrarPokebola = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
-    const pokebola = yield pokebola_1.default.findOne({ userId });
+    const pokebola = yield pokebola_1.default.findOne({ userId, status: true });
     return res.json(pokebola);
 });
 exports.mostrarPokebola = mostrarPokebola;
 const mostrarPokebolas = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { idAutenticado } = req;
-    console.log(idAutenticado);
     const usuario = yield usuario_1.default.findById(idAutenticado);
     if (!usuario) {
         return res.json({ msg: 'No existe un usuario con ese id' });
@@ -39,7 +38,7 @@ const mostrarPokebolas = (req, res) => __awaiter(void 0, void 0, void 0, functio
 exports.mostrarPokebolas = mostrarPokebolas;
 const crearPokebola = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
-    const usuario = yield pokebola_1.default.findOne({ userId });
+    const usuario = yield pokebola_1.default.findOne({ userId, status: true });
     if (usuario) {
         return res.json({ msg: 'Este usuario ya tiene una pokebola registrada' });
     }
@@ -50,10 +49,11 @@ const crearPokebola = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.crearPokebola = crearPokebola;
 const eliminarPokebola = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
-    const usuario = yield pokebola_1.default.findOne({ userId });
+    const usuario = yield pokebola_1.default.findOne({ userId, status: true });
     if (!usuario) {
-        return res.json({ msg: 'Este usuario ya tiene una pokebola registrada' });
+        return res.json({ msg: 'El usuario no tiene pokebola para eliminar' });
     }
+    ;
     const pokebola = yield pokebola_1.default.findByIdAndUpdate(usuario.id, { status: false }, { new: true });
     if (!pokebola) {
         return res.json({ msg: 'La pokebola no existe' });
@@ -61,7 +61,7 @@ const eliminarPokebola = (req, res) => __awaiter(void 0, void 0, void 0, functio
     res.json(pokebola);
 });
 exports.eliminarPokebola = eliminarPokebola;
-const incluirPokemon = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const agregarPokemon = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, pokemonId } = req.params;
     const pokebola = yield pokebola_1.default.findOne({ userId });
     if (!pokebola) {
@@ -69,22 +69,36 @@ const incluirPokemon = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
     ;
     if (Number(pokemonId) > 1008) {
-        return res.json({ msg: 'Superaste el limite' });
+        return res.json({ msg: 'No existe un pokemon con ese id' });
     }
     ;
-    const resp = yield (0, node_fetch_1.default)(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`);
-    const { name, id, pal_park_encounters, capture_rate, color, habitat, egg_groups } = yield resp.json();
-    const [{ base_score }] = pal_park_encounters;
-    const pokemon = { name, id, capture_rate, base_score, color, habitat, egg_groups };
-    pokebola.pokemones.push(pokemon);
+    const pokemon = yield (0, traer_pokemon_1.traerPokemon)(pokemonId);
+    const pokemones = pokebola.pokemones;
+    if (pokemones.length >= 10) {
+        return res.json({ msg: 'Lo siento has llegado al maximo de pokemones, para poder agregar uno nuevo debes eliminar uno' });
+    }
+    pokemones.push(pokemon);
     pokebola.save();
     return res.json(pokebola);
 });
-exports.incluirPokemon = incluirPokemon;
+exports.agregarPokemon = agregarPokemon;
 const eliminarPokemon = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { idAutenticado } = req;
-    const pokebola = yield pokebola_1.default.findOne({ userId: idAutenticado });
-    res.json(pokebola);
+    const { pokemonId, userId } = req.params;
+    const pokebola = yield pokebola_1.default.findOne({ userId });
+    if (!pokebola) {
+        return res.json({ msg: 'El usuario ingresado no tiene una pokebola registrada' });
+    }
+    ;
+    const pokemones = pokebola.pokemones;
+    const pokemon = pokemones.findIndex((pokemon) => pokemon.id === Number(pokemonId));
+    if (pokemon >= 0) {
+        pokemones.splice(pokemon, 1);
+    }
+    else {
+        return res.json({ msg: 'No existe ese pokemon dentro de la pokebola' });
+    }
+    pokebola.save();
+    res.json({ msg: `El pokemon con id ${pokemonId} ha sido eliminado exitosamente`, pokemon, pokebola });
 });
 exports.eliminarPokemon = eliminarPokemon;
 //# sourceMappingURL=pokebola.js.map

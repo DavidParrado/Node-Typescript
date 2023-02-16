@@ -10,7 +10,7 @@ export interface IPokemon {
     egg_groups: string;
 }
 
-const PokebolaSchema = new Schema({
+const PokebolaSchema:Schema = new Schema({
     userId: { 
         type: Schema.Types.ObjectId,
         ref: 'usuarios',

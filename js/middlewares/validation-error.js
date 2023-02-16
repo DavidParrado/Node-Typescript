@@ -15,6 +15,9 @@ const express_1 = require("express");
 const index_1 = require("../helpers/index");
 const validaciones_1 = require("./validaciones");
 const validarjwt_1 = require("./validarjwt");
+const rol_admin_maestro_1 = require("./rol-admin-maestro");
+const rol_admin_1 = require("./rol-admin");
+const validar_id_1 = require("./validar-id");
 const validarErrores = (req = express_1.request, res = express_1.response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -35,7 +38,11 @@ const validarCrearUsuario = () => {
 exports.validarCrearUsuario = validarCrearUsuario;
 const validarActualizarUsuario = () => {
     return [
+        validar_id_1.validarId,
+        (0, express_validator_1.check)('id', 'No es un id de mongo válido').isMongoId(),
+        (0, express_validator_1.check)('id').custom(validaciones_1.existeId),
         validarjwt_1.validarJwt,
+        rol_admin_maestro_1.validarRoles,
         index_1.validarNombre,
         index_1.verificarEmail,
         index_1.verificarRol,
@@ -45,24 +52,30 @@ const validarActualizarUsuario = () => {
 exports.validarActualizarUsuario = validarActualizarUsuario;
 const validarBuscarUsuarios = () => {
     return [
-        validarjwt_1.validarJwt
+        validarjwt_1.validarJwt,
+        rol_admin_1.esAdmin,
+        exports.validarErrores
     ];
 };
 exports.validarBuscarUsuarios = validarBuscarUsuarios;
 const validarBuscarUsuario = () => {
     return [
+        validar_id_1.validarId,
         (0, express_validator_1.check)('id', 'No es un id de mongo válido').isMongoId(),
         (0, express_validator_1.check)('id').custom(validaciones_1.existeId),
         validarjwt_1.validarJwt,
+        rol_admin_maestro_1.validarRoles,
         exports.validarErrores
     ];
 };
 exports.validarBuscarUsuario = validarBuscarUsuario;
 const validarEliminarUsuario = () => {
     return [
+        validar_id_1.validarId,
         (0, express_validator_1.check)('id', 'No es un id de mongo válido').isMongoId(),
         (0, express_validator_1.check)('id').custom(validaciones_1.existeId),
         validarjwt_1.validarJwt,
+        rol_admin_maestro_1.validarRoles,
         exports.validarErrores
     ];
 };

@@ -5,6 +5,9 @@ import { request, response } from 'express';
 import { verificarEmail, validarNombre, verificarRol, validarPassword } from '../helpers/index'
 import { validarEmail, existeId } from './validaciones';
 import { validarJwt } from './validarjwt';
+import { validarRoles } from './rol-admin-maestro';
+import { esAdmin } from './rol-admin';
+import { validarId } from './validar-id';
 
 
 export const validarErrores = async( req = request, res = response, next: () => void  ) => {
@@ -28,8 +31,12 @@ export const validarCrearUsuario = () => {
 }
 
 export const validarActualizarUsuario = () => {
-    return [
+    return [        
+        validarId,
+        check('id','No es un id de mongo válido').isMongoId(),
+        check('id').custom( existeId ),
         validarJwt,
+        validarRoles,
         validarNombre,
         verificarEmail,
         verificarRol,
@@ -39,24 +46,30 @@ export const validarActualizarUsuario = () => {
 
 export const validarBuscarUsuarios = () => {
     return [
-        validarJwt
+        validarJwt,
+        esAdmin,
+        validarErrores
     ]
 }
 
 export const validarBuscarUsuario = () => {
     return [
+        validarId,
         check('id','No es un id de mongo válido').isMongoId(),
         check('id').custom( existeId ),
         validarJwt,
+        validarRoles,
         validarErrores
     ]
 }
 
 export const validarEliminarUsuario = () => {
     return [
+        validarId,
         check('id','No es un id de mongo válido').isMongoId(),
         check('id').custom( existeId ),
         validarJwt,
+        validarRoles,
         validarErrores
     ]
 }

@@ -51,11 +51,6 @@ const usuariosPost = (req = express_1.request, res = express_1.response) => __aw
 });
 exports.usuariosPost = usuariosPost;
 const usuariosPut = (req, res = express_1.response) => __awaiter(void 0, void 0, void 0, function* () {
-    const idAutenticado = req.idAutenticado;
-    const usuarioAutenticado = yield usuario_1.default.findOne({ id: idAutenticado });
-    if ((usuarioAutenticado === null || usuarioAutenticado === void 0 ? void 0 : usuarioAutenticado.rol) !== 'ADMIN') {
-        return res.json({ msg: 'No tienes acceso a esta ruta' });
-    }
     const { id } = req.params;
     const _a = req.body, { status, password } = _a, data = __rest(_a, ["status", "password"]);
     if (Object.entries(req.body).length === 0)
@@ -66,7 +61,7 @@ const usuariosPut = (req, res = express_1.response) => __awaiter(void 0, void 0,
         data.password = hash;
     }
     const usuario = yield usuario_1.default.findByIdAndUpdate(id, data, { new: true });
-    if (!usuario) {
+    if (!usuario || !usuario.status) {
         return res.json({
             msg: 'El usuario no existe'
         });
@@ -75,11 +70,6 @@ const usuariosPut = (req, res = express_1.response) => __awaiter(void 0, void 0,
 });
 exports.usuariosPut = usuariosPut;
 const usuariosDelete = (req, res = express_1.response) => __awaiter(void 0, void 0, void 0, function* () {
-    const idAutenticado = req.idAutenticado;
-    const usuarioAutenticado = yield usuario_1.default.findOne({ id: idAutenticado });
-    if ((usuarioAutenticado === null || usuarioAutenticado === void 0 ? void 0 : usuarioAutenticado.rol) !== 'ADMIN') {
-        return res.json({ msg: 'No tienes acceso a esta ruta' });
-    }
     const { id } = req.params;
     const usuario = yield usuario_1.default.findByIdAndUpdate(id, { status: false }, { new: true });
     if (!usuario) {
