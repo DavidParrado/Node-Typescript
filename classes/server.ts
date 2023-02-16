@@ -3,6 +3,7 @@ import { dbConnection } from '../db/mongoose';
 import { router as routerUsuarios } from '../routes/usuarios';
 import { router as routerAuth } from '../routes/auth';
 import { router as routerPokemon } from '../routes/pokemon';
+import { router as routerPokebola } from '../routes/pokebola';
 
 export class Server { 
     private app: Express;
@@ -12,7 +13,7 @@ export class Server {
         this.app = express();
         this.paths = { 
             usuarios:   '/api/usuarios',
-            pokemon:  '/pokemon',
+            pokebola:  '/pokebola',
             auth:      '/auth',
         }
 
@@ -34,8 +35,8 @@ export class Server {
     
     routes() { 
         this.app.use( this.paths.usuarios, routerUsuarios );
+        this.app.use( this.paths.pokebola, routerPokebola );
         this.app.use( this.paths.auth, routerAuth );
-        this.app.use( this.paths.pokemon, routerPokemon );
     }
     
     listen() { 

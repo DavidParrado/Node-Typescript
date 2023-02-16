@@ -9,14 +9,14 @@ export interface AuthInterface extends Request {
 
 export const validarJwt = async( req:AuthInterface , res = response, next: () => void ) => {
 
-    const { id } = req.params;
+    const { id, userId } = req.params;
     const { token } = req.headers;
     
     if( !token ) return res.json({ msg: 'No existe token en los headers de la petición'}) 
     
-    if( id ) { 
+    if( id || userId ) { 
     
-        const usuario = await Usuario.findById( id );
+        const usuario = await Usuario.findById( id || userId );
         const payload = jwt.verify( <string>token , process.env.SECRETKEY!, ( err, decode ) =>  ( decode !== undefined ) ? decode : err )
         if( (<any>payload).id !== usuario?.id ) { 
             return res.json({ msg: 'Token invalido'})
@@ -31,6 +31,7 @@ export const validarJwt = async( req:AuthInterface , res = response, next: () =>
         if( (<any>payload).id !== usuario?.id ) { 
             return res.json({ msg: 'Token invalido'})
         }
+        req.idAutenticado = (<any>payload).id
     }
     next()
 

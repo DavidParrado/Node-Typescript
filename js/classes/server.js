@@ -17,13 +17,13 @@ const express_1 = __importDefault(require("express"));
 const mongoose_1 = require("../db/mongoose");
 const usuarios_1 = require("../routes/usuarios");
 const auth_1 = require("../routes/auth");
-const pokemon_1 = require("../routes/pokemon");
+const pokebola_1 = require("../routes/pokebola");
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.paths = {
             usuarios: '/api/usuarios',
-            pokemon: '/pokemon',
+            pokebola: '/pokebola',
             auth: '/auth',
         };
         this.connection();
@@ -40,8 +40,8 @@ class Server {
     }
     routes() {
         this.app.use(this.paths.usuarios, usuarios_1.router);
+        this.app.use(this.paths.pokebola, pokebola_1.router);
         this.app.use(this.paths.auth, auth_1.router);
-        this.app.use(this.paths.pokemon, pokemon_1.router);
     }
     listen() {
         this.app.listen(process.env.PORT, () => {

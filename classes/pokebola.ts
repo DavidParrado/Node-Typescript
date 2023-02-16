@@ -1,11 +1,32 @@
 import { Schema, model } from 'mongoose';
 
+export interface IPokemon {
+    name: string;
+    id: number;
+    base_score: number;
+    capture_rate: number;
+    color: string;
+    habitat: string;
+    egg_groups: string;
+}
 
 const PokebolaSchema = new Schema({
-    pokebola: []
+    userId: { 
+        type: Schema.Types.ObjectId,
+        ref: 'usuarios',
+        required: true
+    },
+    pokemones: { 
+        type: Array, 
+        required: true
+    },
+    status: {
+        type: Boolean,
+        default: true
+    }
 })
 
-export = model('pokebolas', PokebolaSchema);
+export default model('pokebolas', PokebolaSchema);
 
 
 

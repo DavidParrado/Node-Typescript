@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export const dbConnection = async() => {
 
     try {
-        mongoose.connect(`mongodb+srv://davidparrado:Grimaldo1@cluster0.501pthq.mongodb.net/test`, () => {
+        mongoose.connect(process.env.CONNECTION as string, () => {
             console.log('Base de datos online');
         });
     

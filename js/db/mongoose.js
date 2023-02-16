@@ -16,7 +16,7 @@ exports.dbConnection = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const dbConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        mongoose_1.default.connect(`mongodb+srv://davidparrado:Grimaldo1@cluster0.501pthq.mongodb.net/test`, () => {
+        mongoose_1.default.connect(process.env.CONNECTION, () => {
             console.log('Base de datos online');
         });
     }
