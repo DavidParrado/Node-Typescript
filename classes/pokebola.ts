@@ -17,7 +17,7 @@ const PokebolaSchema:Schema = new Schema({
         required: true
     },
     pokemones: { 
-        type: Array, 
+        type: Array<IPokemon>, 
         required: true
     },
     status: {

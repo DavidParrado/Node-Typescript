@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validarRoles = void 0;
 const usuario_1 = __importDefault(require("../classes/usuario"));
 const validarRoles = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { idAutenticado } = req;
+    const idAutenticado = req.idAutenticado;
     const { userId, id } = req.params;
     if (userId) {
         const usuario = yield usuario_1.default.findById(idAutenticado);

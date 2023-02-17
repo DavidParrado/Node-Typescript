@@ -1,7 +1,7 @@
-import { request, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 
-export const validarPassword = async( req = request, res = response, next: () => void ) => {
+export const validarPassword = async(  req: Request, res: Response, next: NextFunction  ) => {
 
     const password: string = req.body.password;
         

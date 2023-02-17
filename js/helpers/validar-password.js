@@ -10,8 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validarPassword = void 0;
-const express_1 = require("express");
-const validarPassword = (req = express_1.request, res = express_1.response, next) => __awaiter(void 0, void 0, void 0, function* () {
+const validarPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const password = req.body.password;
     if (password === "" || password !== undefined) {
         if (password.length < 8) {

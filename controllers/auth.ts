@@ -1,4 +1,4 @@
-import { request, response } from "express"
+import { Request, Response } from 'express';
 import Usuario from '../classes/usuario';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -7,9 +7,14 @@ export interface payload{
     id: string
 }
 
-export const login = async( req = request, res = response ) => {
+interface Credenciales {
+    email: string;
+    password: string;
+}
 
-    const { email, password } = req.body;
+export const login = async( req: Request, res: Response ) => {
+
+    const { email, password }: Credenciales = req.body;
 
     const usuario = await Usuario.findOne({ email, status: true });
     if( !usuario ) { 

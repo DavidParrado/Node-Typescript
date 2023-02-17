@@ -11,14 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.autenticacion = exports.validarEliminarUsuario = exports.validarBuscarUsuario = exports.validarBuscarUsuarios = exports.validarActualizarUsuario = exports.validarCrearUsuario = exports.validarErrores = void 0;
 const express_validator_1 = require("express-validator");
-const express_1 = require("express");
 const index_1 = require("../helpers/index");
 const validaciones_1 = require("./validaciones");
 const validarjwt_1 = require("./validarjwt");
 const rol_admin_maestro_1 = require("./rol-admin-maestro");
 const rol_admin_1 = require("./rol-admin");
 const validar_id_1 = require("./validar-id");
-const validarErrores = (req = express_1.request, res = express_1.response, next) => __awaiter(void 0, void 0, void 0, function* () {
+const validarErrores = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         return res.json(errors);

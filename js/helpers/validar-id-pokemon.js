@@ -13,9 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validarIdPokemon = void 0;
-const express_1 = require("express");
 const pokebola_1 = __importDefault(require("../classes/pokebola"));
-const validarIdPokemon = (req = express_1.request, res = express_1.response, next) => __awaiter(void 0, void 0, void 0, function* () {
+const validarIdPokemon = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, pokemonId } = req.params;
     const pokebola = yield pokebola_1.default.findOne({ userId });
     if (!pokebola) {

@@ -1,7 +1,7 @@
-import { request, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 
-export const verificarRol = async( req = request, res = response, next: () => void ) => {
+export const verificarRol = async( req: Request, res: Response, next: NextFunction ) => {
     
     const rol: string = req.body.rol;
 

@@ -1,12 +1,10 @@
-import { response, request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import Usuario from '../classes/usuario';
-import { AuthInterface } from '../middlewares/validarjwt';
 
 
 
-
-
-export const verificarEmail = async( req = request, res = response, next: () => void ) => {
+export const verificarEmail = async( req: Request, res: Response, next: NextFunction ) => {
+    
     const { id } = req.params;
     const email: string = req.body.email;
     const usuario = await Usuario.findById( id );

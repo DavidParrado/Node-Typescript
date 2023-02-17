@@ -18,7 +18,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const usuario_1 = __importDefault(require("../classes/usuario"));
 const validarJwt = (req, res = express_1.response, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, userId } = req.params;
-    const { token } = req.headers;
+    const token = req.headers.token;
     if (!token)
         return res.json({ msg: 'No existe token en los headers de la petición' });
     if (id || userId) {

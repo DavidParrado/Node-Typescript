@@ -1,6 +1,6 @@
 
 import { validationResult, body, check } from 'express-validator';
-import { request, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 import { verificarEmail, validarNombre, verificarRol, validarPassword } from '../helpers/index'
 import { validarEmail, existeId } from './validaciones';
@@ -10,7 +10,7 @@ import { esAdmin } from './rol-admin';
 import { validarId } from './validar-id';
 
 
-export const validarErrores = async( req = request, res = response, next: () => void  ) => {
+export const validarErrores = async( req: Request, res: Response, next: NextFunction  ) => {
     const errors = validationResult( req );
     if( !errors.isEmpty() ) { 
         return res.json( errors );

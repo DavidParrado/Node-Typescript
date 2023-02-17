@@ -1,4 +1,4 @@
-import { request, Request , response } from 'express';
+import { Request, response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import Usuario from '../classes/usuario';
 
@@ -6,11 +6,16 @@ export interface AuthInterface extends Request {
     idAutenticado?: string
 }
 
+export interface Params {
+    id?: string,
+    userId?: string,
+    pokemonId?: string
+}
 
-export const validarJwt = async( req:AuthInterface , res = response, next: () => void ) => {
+export const validarJwt = async( req:AuthInterface , res = response, next: NextFunction ) => {
 
-    const { id, userId } = req.params;
-    const { token } = req.headers;
+    const { id, userId }: Params = req.params;
+    const token: string | string[] | undefined = req.headers.token;
     
     if( !token ) return res.json({ msg: 'No existe token en los headers de la petición'}) 
     

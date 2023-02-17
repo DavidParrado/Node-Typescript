@@ -3,7 +3,7 @@ dotenv.config()
 
 import { Server } from "./classes/server";
 
-const server = new Server();
+const server: Server = new Server();
 server.listen();
 
 

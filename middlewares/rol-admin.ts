@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { Response, NextFunction } from 'express';
 import Usuario from "../classes/usuario";
 import { AuthInterface } from "./validarjwt";
 
 
-export const esAdmin = async( req: AuthInterface, res: Response, next: () => void ) => {
+export const esAdmin = async( req: AuthInterface, res: Response, next: NextFunction ) => {
 
     const { idAutenticado }  = req;
     if( !idAutenticado ) { 

@@ -3,7 +3,7 @@ import { crearPokebola, agregarPokemon, mostrarPokebola, eliminarPokemon, elimin
 import { validarCrearPokebola, validarIncluirPokemon, validarEliminarPokebola, validarEliminarPokemon, validarMostrarPokebolas, validarMostrarPokebola } from '../middlewares/validation-pokebolas';
 
 
-export const router = Router();
+export const router: Router = Router();
 
 router.get('/', validarMostrarPokebolas() , mostrarPokebolas );
 

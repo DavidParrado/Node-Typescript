@@ -42,5 +42,6 @@ export class Server {
             console.log(`Servidor corriendo en el puerto 8080`);
         })
     }
+    
 }
 

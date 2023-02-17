@@ -24,23 +24,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usuariosDelete = exports.usuariosPut = exports.usuariosPost = exports.usuarioGet = exports.usuariosGet = void 0;
-const express_1 = require("express");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const usuario_1 = __importDefault(require("../classes/usuario"));
-const usuariosGet = (req = express_1.request, res = express_1.response) => __awaiter(void 0, void 0, void 0, function* () {
+const usuariosGet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { limit } = req.query;
     const usuarios = yield usuario_1.default.find({ status: true })
         .limit(Number(limit));
     return res.json(usuarios);
 });
 exports.usuariosGet = usuariosGet;
-const usuarioGet = (req = express_1.request, res = express_1.response) => __awaiter(void 0, void 0, void 0, function* () {
+const usuarioGet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const usuario = yield usuario_1.default.findById(id).find({ status: true });
     return res.json(usuario);
 });
 exports.usuarioGet = usuarioGet;
-const usuariosPost = (req = express_1.request, res = express_1.response) => __awaiter(void 0, void 0, void 0, function* () {
+const usuariosPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { nombre, email, password, rol } = req.body;
     const usuario = new usuario_1.default({ nombre, email, password, rol });
     const salt = bcryptjs_1.default.genSaltSync(10);
@@ -50,7 +49,7 @@ const usuariosPost = (req = express_1.request, res = express_1.response) => __aw
     res.json(usuario);
 });
 exports.usuariosPost = usuariosPost;
-const usuariosPut = (req, res = express_1.response) => __awaiter(void 0, void 0, void 0, function* () {
+const usuariosPut = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const _a = req.body, { status, password } = _a, data = __rest(_a, ["status", "password"]);
     if (Object.entries(req.body).length === 0)
@@ -69,7 +68,7 @@ const usuariosPut = (req, res = express_1.response) => __awaiter(void 0, void 0,
     return res.json(usuario);
 });
 exports.usuariosPut = usuariosPut;
-const usuariosDelete = (req, res = express_1.response) => __awaiter(void 0, void 0, void 0, function* () {
+const usuariosDelete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const usuario = yield usuario_1.default.findByIdAndUpdate(id, { status: false }, { new: true });
     if (!usuario) {

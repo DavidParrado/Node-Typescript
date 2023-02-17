@@ -10,8 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validarNombre = void 0;
-const express_1 = require("express");
-const validarNombre = (req = express_1.request, res = express_1.response, next) => __awaiter(void 0, void 0, void 0, function* () {
+const validarNombre = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const nombre = req.body.nombre;
     if (nombre === "") {
         return res.json({ msg: 'El campo nombre esta vacio' });

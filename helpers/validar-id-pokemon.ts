@@ -1,18 +1,19 @@
-import { request, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import Pokebola, { IPokemon } from '../classes/pokebola';
+import { Params } from '../middlewares/validarjwt';
 
 
 
-export const validarIdPokemon = async( req = request, res = response, next: () => void ) => {
+export const validarIdPokemon = async( req: Request, res: Response, next: NextFunction ) => {
     
-    const { userId, pokemonId } = req.params;
+    const { userId, pokemonId }: Params = req.params;
     
     const pokebola = await Pokebola.findOne({ userId });
     if( !pokebola ) { return res.json({ msg: 'El usuario no tiene ninguna pokebola registrada'})};
     
     const pokemonesIds: number[] = [];
     
-    const pokemones = pokebola.pokemones;
+    const pokemones: IPokemon[] = pokebola.pokemones;
     pokemones.forEach( (elemento: IPokemon ) => {
         pokemonesIds.push( elemento.id );
             

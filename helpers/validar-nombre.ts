@@ -1,8 +1,8 @@
-import { request, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 
 
-export const validarNombre = async( req = request, res = response, next: () => void ) => {
+export const validarNombre = async( req: Request, res: Response, next: NextFunction ) => {
     
     const nombre: string = req.body.nombre;
     if( nombre === "" ) {

@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import { Response, NextFunction } from 'express';
 import Usuario from "../classes/usuario";
-import { AuthInterface } from "./validarjwt";
+import { AuthInterface, Params } from "./validarjwt";
 
 
-export const validarRoles = async( req: AuthInterface, res: Response, next: () => void ) => {
+export const validarRoles = async( req: AuthInterface, res: Response, next: NextFunction ) => {
 
-    const { idAutenticado }  = req;
-    const { userId, id } = req.params;
+    const idAutenticado: string | undefined  = req.idAutenticado;
+    const { userId, id }: Params = req.params;
 
     if( userId ) { 
     

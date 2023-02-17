@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.eliminarPokemon = exports.agregarPokemon = exports.eliminarPokebola = exports.crearPokebola = exports.mostrarPokebolas = exports.mostrarPokebola = void 0;
-const pokebola_1 = __importDefault(require("../classes/pokebola"));
-const usuario_1 = __importDefault(require("../classes/usuario"));
 const traer_pokemon_1 = require("../helpers/traer-pokemon");
+const usuario_1 = __importDefault(require("../classes/usuario"));
+const pokebola_1 = __importDefault(require("../classes/pokebola"));
 const mostrarPokebola = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
     const pokebola = yield pokebola_1.default.findOne({ userId, status: true });

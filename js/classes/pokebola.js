@@ -8,7 +8,7 @@ const PokebolaSchema = new mongoose_1.Schema({
         required: true
     },
     pokemones: {
-        type: Array,
+        type: (Array),
         required: true
     },
     status: {

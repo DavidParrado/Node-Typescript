@@ -1,10 +1,11 @@
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
+import { Params } from './validarjwt';
 
 
 
-export const validarId = ( req: Request, res: Response, next: () => void ) => {
+export const validarId = ( req: Request, res: Response, next: NextFunction ) => {
 
-    const { id } = req.params;
+    const { id }: Params = req.params;
 
     if ( !id.match(/^[0-9a-fA-F]{24}$/) ) {
         return res.json({msg:'No es un id de mongo'})
